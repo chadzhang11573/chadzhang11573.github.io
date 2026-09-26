@@ -1,1 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>works — adrian zhang</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'Telegrama';
+            src: url('data:font/otf;base64,PASTE_BASE64_HERE') format('opentype');
+            font-weight: normal; font-style: normal;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: monospace; line-height: 1.6; color: #ffffff; background-color: #000000; }
+        h2 { font-family: 'Telegrama', monospace; font-size: 2.2rem; margin-bottom: 2rem; text-align: center; text-transform: uppercase; letter-spacing: 0.15em; color: #ff00ff; }
 
+        nav { background: #000000; padding: 1rem 2rem; box-shadow: 0 2px 5px rgba(255,255,255,0.05); position: sticky; top: 0; z-index: 100; }
+        nav ul { list-style: none; display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+        nav a  { text-decoration: none; font-weight: 500; transition: color 0.2s; }
+        nav a:hover { opacity: 1; }
+        .nav-home:hover         { color: #888888; }
+        .nav-about:hover        { color: #888888; }
+        .nav-compositions:hover { color: #ff00ff; }
+        .nav-recordings:hover   { color: #ff00ff; }
+        .nav-psych:hover        { color: #ffe600; }
+        .nav-volleyball:hover   { color: #00f5ff; }
+        .nav-resume:hover       { color: #c084fc; }
+        .nav-contact:hover      { color: #00f5ff; }
+        .nav-home, .nav-about, .nav-compositions, .nav-recordings,
+        .nav-psych, .nav-volleyball, .nav-resume { color: #ffffff; }
+        .nav-contact { color: #ffffff; font-weight: 700; }
+
+        section { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .about-content { max-width: 800px; margin: 0 auto; font-size: 1.1rem; color: #ff00ff; margin-bottom: 3rem; text-align: center; }
+
+        /* ── work item ── */
+        .works-grid { display: grid; gap: 2.5rem; margin-top: 2rem; }
+
+        .work-item {
+            background: #111111;
+            border-radius: 10px;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            position: relative; z-index: 1;
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+        .work-item:hover { transform: scale(1.02); z-index: 10; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+
+        .work-left { border-right: 1px solid #ff00ff33; padding-right: 2rem; }
+        .work-title { font-size: 1.1rem; font-weight: 600; color: #ff00ff; margin-bottom: 0.3rem; }
+        .work-year  { font-size: 0.85rem; color: #ff00ff; opacity: 0.7; margin-bottom: 0.5rem; }
+        .work-instrumentation { font-size: 0.85rem; color: #ff00ff; opacity: 0.8; margin-top: 0.5rem; }
+        .work-contact { font-size: 0.85rem; color: #ffffff; margin-top: 0.6rem; }
+        .work-desc  { color: #cccccc; margin-bottom: 0.5rem; font-size: 0.95rem; }
+
+        /* ── score carousel (right side) ── */
+        .work-right { display: flex; flex-direction: column; gap: 1rem; }
+
+        .score-carousel { position: relative; }
+        .score-slides { display: flex; overflow: hidden; border-radius: 6px; border: 1px solid #ff00ff22; }
+        .score-slide {
+            min-width: 100%;
+            background: #1a1a1a;
+            aspect-ratio: 8.5 / 11;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-size: 0.75rem;
+            letter-spacing: 0.08em;
+            transition: transform 0.4s ease;
+            /* ── replace the background with your score image ──
+               e.g. background-image: url('/scores/war-p1.png');
+                    background-size: cover; background-position: top; */
+            background: repeating-linear-gradient(45deg, #181818 0px, #181818 2px, #111 2px, #111 10px);
+        }
+        .score-slide img { width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 5px; }
+
+        .score-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; }
+        .score-btn {
+            background: none; border: 1px solid #ff00ff44; color: #ff00ff;
+            padding: 0.2rem 0.6rem; border-radius: 4px; cursor: pointer;
+            font-family: monospace; font-size: 0.8rem; transition: background 0.2s;
+        }
+        .score-btn:hover { background: rgba(255,0,255,0.1); }
+        .score-page-label { font-size: 0.75rem; color: #ff00ff; opacity: 0.5; }
+
+        /* ── footer ── */
+        footer { background: #111111; color: white; text-align: center; padding: 2rem; }
+        .social-links { display: flex; justify-content: center; gap: 1.5rem; margin-top: 1rem; }
+        .social-links a { text-decoration: none; transition: color 0.2s; }
+        .yt-you, .yt-tube  { color: #ff00ff; }
+        .ig-ins, .ig-tag, .ig-ram { color: #00f5ff; }
+        .gmail-g, .gmail-m, .gmail-a, .gmail-i, .gmail-l { color: #ffe600; }
+        .link-youtube:hover .yt-you  { color: #ff0000; }
+        .link-youtube:hover .yt-tube { color: #ffffff; }
+        .link-instagram:hover .ig-ins { color: #BD22E2; }
+        .link-instagram:hover .ig-tag { color: #E61B5D; }
+        .link-instagram:hover .ig-ram { color: #FAD620; }
+        .link-gmail:hover .gmail-g { color: #4285f4; }
+        .link-gmail:hover .gmail-m { color: #c5221f; }
+        .link-gmail:hover .gmail-a { color: #ea4335; }
+        .link-gmail:hover .gmail-i { color: #fbbc04; }
+        .link-gmail:hover .gmail-l { color: #34a853; }
+
+        @media (max-width: 768px) {
+            h2 { font-size: 1.6rem; }
+            nav ul { flex-wrap: wrap; gap: 1rem; }
+            .work-item { grid-template-columns: 1fr; }
+            .work-left { border-right: none; border-bottom: 1px solid #ff00ff33; padding-right: 0; padding-bottom: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/"             class="nav-home">home</a></li>
+            <li><a href="/#about"       class="nav-about">about</a></li>
+            <li><a href="/#compositions"class="nav-compositions">compositions</a></li>
+            <li><a href="/#recordings"  class="nav-recordings">recordings</a></li>
+            <li><a href="/psychology"   class="nav-psych">psychology</a></li>
+            <li><a href="/volleyball"   class="nav-volleyball">volleyball</a></li>
+            <li><a href="/resume"       class="nav-resume">resume</a></li>
+            <li><a href="/#contact"     class="nav-contact">| contact me! |</a></li>
+        </ul>
+    </nav>
+
+    <section>
+        <h2>works</h2>
+        <div class="about-content">
+            complete catalog of original compositions, organized by year.
+        </div>
+
+        <div class="works-grid">
+
+            <!-- ═══════════ 2025 ═══════════ -->
+
+            <div class="work-item">
+                <div class="work-left">
+                    <div class="work-title">three three two</div>
+                    <div class="work-year">c. 2025</div>
+                    <div class="work-instrumentation">instrumentation: clarinet in Bb, horn in F, bassoon, viola, violoncello, percussion (marimba, snare drum, suspended cymbal [with bow])</div>
+                    <p class="work-contact">for score inquiries please contact <a href="mailto:adrian.b.zhang@gmail.com" style="color:#ffffff;">adrian.b.zhang@gmail.com</a></p>
+                </div>
+                <div class="work-right">
+                    <p class="work-desc">three three two is a play on the phrase itself; the first and second movements are in ternary form, while the third and final movement is in binary form. throughout the piece, and especially in the first movement, san/san/er, the three-three-two ostinato is a significant motif. 3'32", the pointillistic second movement, aims to last that exact duration. lastly, TWO!!! ...and one is a celebratory final movement that uses the ideas of movements one and two.</p>
+                    <!-- score carousel: add <img src="/scores/three-three-two-p1.png"> etc. inside each .score-slide -->
+                    <div class="score-carousel" data-id="ttw">
+                        <div class="score-slides" id="slides-ttw">
+                            <div class="score-slide">[ paste score image p.1 here ]</div>
+                            <div class="score-slide">[ paste score image p.2 here ]</div>
+                            <div class="score-slide">[ paste score image p.3 here ]</div>
+                        </div>
+                        <div class="score-nav">
+                            <button class="score-btn" onclick="scoreNav('ttw',-1)">&#8249; prev</button>
+                            <span class="score-page-label" id="label-ttw">p. 1</span>
+                            <button class="score-btn" onclick="scoreNav('ttw',1)">next &#8250;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="work-item">
+                <div class="work-left">
+                    <div class="work-title">into the depths</div>
+                    <div class="work-year">c. 2025</div>
+                    <div class="work-instrumentation">for triple winds orchestra</div>
+                    <p class="work-contact">for score inquiries please contact <a href="mailto:adrian.b.zhang@gmail.com" style="color:#ffffff;">adrian.b.zhang@gmail.com</a></p>
+                </div>
+                <div class="work-right">
+                    <p class="work-desc">this summer, at boston university's tanglewood institute summer camp, our composing program was given a week to write for orchestra. the concept of this piece was that i wanted to depict a scene in which a drone camera swoops down to reveal a bustling, underground cyberpunk city. the listener is back at the top, escaping from the dystopia that is a cyberpunk world, free again.</p>
+                    <div class="score-carousel" data-id="depths">
+                        <div class="score-slides" id="slides-depths">
+                            <div class="score-slide">[ paste score image p.1 here ]</div>
+                            <div class="score-slide">[ paste score image p.2 here ]</div>
+                            <div class="score-slide">[ paste score image p.3 here ]</div>
+                        </div>
+                        <div class="score-nav">
+                            <button class="score-btn" onclick="scoreNav('depths',-1)">&#8249; prev</button>
+                            <span class="score-page-label" id="label-depths">p. 1</span>
+                            <button class="score-btn" onclick="scoreNav('depths',1)">next &#8250;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PLACEHOLDER SLOT A — add a new work here -->
+            <div class="work-item">
+                <div class="work-left">
+                    <div class="work-title">[ work title ]</div>
+                    <div class="work-year">c. 202X</div>
+                    <div class="work-instrumentation">[ instrumentation ]</div>
+                    <p class="work-contact">for score inquiries please contact <a href="mailto:adrian.b.zhang@gmail.com" style="color:#ffffff;">adrian.b.zhang@gmail.com</a></p>
+                </div>
+                <div class="work-right">
+                    <p class="work-desc">[ description ]</p>
+                    <div class="score-carousel" data-id="slotA">
+                        <div class="score-slides" id="slides-slotA">
+                            <div class="score-slide">[ paste score image p.1 here ]</div>
+                            <div class="score-slide">[ paste score image p.2 here ]</div>
+                        </div>
+                        <div class="score-nav">
+                            <button class="score-btn" onclick="scoreNav('slotA',-1)">&#8249; prev</button>
+                            <span class="score-page-label" id="label-slotA">p. 1</span>
+                            <button class="score-btn" onclick="scoreNav('slotA',1)">next &#8250;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══════════ 2024 ═══════════ -->
+
+            <div class="work-item">
+                <div class="work-left">
+                    <div class="work-title">(re)birth</div>
+                    <div class="work-year">c. 2024</div>
+                    <div class="work-instrumentation">for large orchestra</div>
+                    <p class="work-contact">for score inquiries please contact <a href="mailto:adrian.b.zhang@gmail.com" style="color:#ffffff;">adrian.b.zhang@gmail.com</a></p>
+                </div>
+                <div class="work-right">
+                    <p class="work-desc">(re)birth explores the cycle of birth, life, death, and rebirth. it signifies this cycle through the deliberate placement of ideas from the harmonic series; these ideas both begin and end certain passages, as well as the piece itself. as (re)birth weaves between mechanical and organic structures, it demonstrates that the events between periods of growth and subsequent decline are complex. similarly, the piece shifts suddenly from open and lyrical to ambient and discreet, ultimately building to a powerful climax. after all, to be reborn is to change significantly.</p>
+                    <div class="score-carousel" data-id="rebirth">
+                        <div class="score-slides" id="slides-rebirth">
+                            <div class="score-slide">[ paste score image p.1 here ]</div>
+                            <div class="score-slide">[ paste score image p.2 here ]</div>
+                            <div class="score-slide">[ paste score image p.3 here ]</div>
+                        </div>
+                        <div class="score-nav">
+                            <button class="score-btn" onclick="scoreNav('rebirth',-1)">&#8249; prev</button>
+                            <span class="score-page-label" id="label-rebirth">p. 1</span>
+                            <button class="score-btn" onclick="scoreNav('rebirth',1)">next &#8250;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="work-item">
+                <div class="work-left">
+                    <div class="work-title">memories</div>
+                    <div class="work-year">c. 2024</div>
+                    <div class="work-instrumentation">for harp, piano, vibraphone, flute, and cello</div>
+                    <p class="work-contact">for score inquiries please contact <a href="mailto:adrian.b.zhang@gmail.com" style="color:#ffffff;">adrian.b.zhang@gmail.com</a></p>
+                </div>
+                <div class="work-right">
+                    <p class="work-desc">what are memories? whether vivid or opaque, gripping or distant, our memories emerge as fragmented constellations of our lived experiences. when we encounter a sight or sound that feels vaguely familiar, we are likely sensing the resonating echo from an obscure memory just beyond our conscious reach. a majority of "memories" consists of sound fragments — short or long, played once or repeated — a fluctuating structure that reflects the indeterminate nature of memories. consequently, "memories" is notated proportionally, not conforming to a certain length or duration. some parts are left to the performer's interpretation, with each musician potentially perceiving the same material differently.</p>
+                    <div class="score-carousel" data-id="memories">
+                        <div class="score-slides" id="slides-memories">
+                            <div class="score-slide">[ paste score image p.1 here ]</div>
+                            <div class="score-slide">[ paste score image p.2 here ]</div>
+                            <div class="score-slide">[ paste score image p.3 here ]</div>
+                        </div>
+                        <div class="score-nav">
+                            <button class="score-btn" onclick="scoreNav('memories',-1)">&#8249; prev</button>
+                            <span class="score-page-label" id="label-memories">p. 1</span>
+                            <button class="score-btn" onclick="scoreNav('memories',1)">next &#8250;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="work-item">
+                <div class="work-left">
+                    <div class="work-title">meltdown I</div>
+                    <div class="work-year">c. 2024</div>
+                    <div class="work-instrumentation">instrumentation: flute, bass clarinet in Bb, large gong (doubling bass drum), vibraphone, piano, violin, viola, cello</div>
+                    <p class="work-contact">for score inquiries please contact <a href="mailto:adrian.b.zhang@gmail.com" style="color:#ffffff;">adrian.b.zhang@gmail.com</a></p>
+                </div>
+                <div class="work-right">
+                    <p class="work-desc">the word "meltdown" has multiple unique meanings in different contexts. this piece explores one such meaning — that of an environmental meltdown. images of an arctic scene slowly, then explosively progress into crashing icebergs and the cutting of trees as the piece progresses. mixed feelings ranging from ambient neutrality to spiraling confusion are all evoked, symbolizing humanity's dangerously comforting dilemma.</p>
+                    <div class="score-carousel" data-id="meltdown">
+                        <div class="score-slides" id="slides-meltdown">
+                            <div class="score-slide">[ paste score image p.1 here ]</div>
+                            <div class="score-slide">[ paste score image p.2 here ]</div>
+                            <div class="score-slide">[ paste score image p.3 here ]</div>
+                        </div>
+                        <div class="score-nav">
+                            <button class="score-btn" onclick="scoreNav('meltdown',-1)">&#8249; prev</button>
+                            <span class="score-page-label" id="label-meltdown">p. 1</span>
+                            <button class="score-btn" onclick="scoreNav('meltdown',1)">next &#8250;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PLACEHOLDER SLOT B — add a new work here -->
+            <div class="work-item">
+                <div class="work-left">
+                    <div class="work-title">[ work title ]</div>
+                    <div class="work-year">c. 202X</div>
+                    <div class="work-instrumentation">[ instrumentation ]</div>
+                    <p class="work-contact">for score inquiries please contact <a href="mailto:adrian.b.zhang@gmail.com" style="color:#ffffff;">adrian.b.zhang@gmail.com</a></p>
+                </div>
+                <div class="work-right">
+                    <p class="work-desc">[ description ]</p>
+                    <div class="score-carousel" data-id="slotB">
+                        <div class="score-slides" id="slides-slotB">
+                            <div class="score-slide">[ paste score image p.1 here ]</div>
+                            <div class="score-slide">[ paste score image p.2 here ]</div>
+                        </div>
+                        <div class="score-nav">
+                            <button class="score-btn" onclick="scoreNav('slotB',-1)">&#8249; prev</button>
+                            <span class="score-page-label" id="label-slotB">p. 1</span>
+                            <button class="score-btn" onclick="scoreNav('slotB',1)">next &#8250;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══════════ 2023 ═══════════ -->
+
+            <div class="work-item">
+                <div class="work-left">
+                    <div class="work-title">war</div>
+                    <div class="work-year">c. 2023</div>
+                    <div class="work-instrumentation">instrumentation: piano, violin, viola, cello</div>
+                    <p class="work-contact">for score inquiries please contact <a href="mailto:adrian.b.zhang@gmail.com" style="color:#ffffff;">adrian.b.zhang@gmail.com</a></p>
+                </div>
+                <div class="work-right">
+                    <p class="work-desc">mvt. I: conflict symbolizes the violence of warfare. material repeats at certain intervals like attacks in war. such materials use "inverse chords": chords with the same complexity, but opposite feelings. mvt. II: desolation starts with slow chords interrupted by unrelated fragments. mvt. III: death is announced by the tritone of the piano ringing forth like the bell of death.</p>
+                    <div class="score-carousel" data-id="war">
+                        <div class="score-slides" id="slides-war">
+                            <div class="score-slide">[ paste score image p.1 here ]</div>
+                            <div class="score-slide">[ paste score image p.2 here ]</div>
+                            <div class="score-slide">[ paste score image p.3 here ]</div>
+                        </div>
+                        <div class="score-nav">
+                            <button class="score-btn" onclick="scoreNav('war',-1)">&#8249; prev</button>
+                            <span class="score-page-label" id="label-war">p. 1</span>
+                            <button class="score-btn" onclick="scoreNav('war',1)">next &#8250;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="work-item">
+                <div class="work-left">
+                    <div class="work-title">progression</div>
+                    <div class="work-year">c. 2023</div>
+                    <div class="work-instrumentation">instrumentation: solo piano</div>
+                    <p class="work-contact">for score inquiries please contact <a href="mailto:adrian.b.zhang@gmail.com" style="color:#ffffff;">adrian.b.zhang@gmail.com</a></p>
+                </div>
+                <div class="work-right">
+                    <p class="work-desc">a solo piano work tracing a continuous arc of harmonic and emotional development. draws on late romantic gesture while incorporating contemporary voice-leading techniques. the piece unfolds as a single unbroken breath, never returning to where it began.</p>
+                    <div class="score-carousel" data-id="progression">
+                        <div class="score-slides" id="slides-progression">
+                            <div class="score-slide">[ paste score image p.1 here ]</div>
+                            <div class="score-slide">[ paste score image p.2 here ]</div>
+                            <div class="score-slide">[ paste score image p.3 here ]</div>
+                        </div>
+                        <div class="score-nav">
+                            <button class="score-btn" onclick="scoreNav('progression',-1)">&#8249; prev</button>
+                            <span class="score-page-label" id="label-progression">p. 1</span>
+                            <button class="score-btn" onclick="scoreNav('progression',1)">next &#8250;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══════════ 2022 ═══════════ -->
+
+            <div class="work-item">
+                <div class="work-left">
+                    <div class="work-title">quest</div>
+                    <div class="work-year">c. 2022</div>
+                    <div class="work-instrumentation">instrumentation: solo piano</div>
+                    <p class="work-contact">for score inquiries please contact <a href="mailto:adrian.b.zhang@gmail.com" style="color:#ffffff;">adrian.b.zhang@gmail.com</a></p>
+                </div>
+                <div class="work-right">
+                    <p class="work-desc">an introspective solo piano work built around a searching, modal theme that transforms across a series of variations. each variation strips away or adds layers, revealing different facets of the same underlying idea. the work ends unresolved, mid-thought.</p>
+                    <div class="score-carousel" data-id="quest">
+                        <div class="score-slides" id="slides-quest">
+                            <div class="score-slide">[ paste score image p.1 here ]</div>
+                            <div class="score-slide">[ paste score image p.2 here ]</div>
+                            <div class="score-slide">[ paste score image p.3 here ]</div>
+                        </div>
+                        <div class="score-nav">
+                            <button class="score-btn" onclick="scoreNav('quest',-1)">&#8249; prev</button>
+                            <span class="score-page-label" id="label-quest">p. 1</span>
+                            <button class="score-btn" onclick="scoreNav('quest',1)">next &#8250;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end works-grid -->
+    </section>
+
+    <footer>
+        <p>&copy; 2026 adrian zhang. all rights reserved.</p>
+        <div class="social-links">
+            <a href="https://www.youtube.com/@azhang623" target="_blank" class="link-youtube">
+                <span class="yt-you">you</span><span class="yt-tube">tube</span>
+            </a>
+            <a href="mailto:adrian.b.zhang@gmail.com" class="link-gmail">
+                <span class="gmail-g">g</span><span class="gmail-m">m</span><span class="gmail-a">a</span><span class="gmail-i">i</span><span class="gmail-l">l</span>
+            </a>
+            <a href="https://www.instagram.com/azhang_23" target="_blank" class="link-instagram">
+                <span class="ig-ins">ins</span><span class="ig-tag">tag</span><span class="ig-ram">ram</span>
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        /* score page carousel — each work has its own independent state */
+        const scoreState = {};
+        function scoreNav(id, dir) {
+            const container = document.getElementById('slides-' + id);
+            const slides    = container.querySelectorAll('.score-slide');
+            if (!scoreState[id]) scoreState[id] = 0;
+            scoreState[id] = (scoreState[id] + dir + slides.length) % slides.length;
+            container.style.transform = `translateX(-${scoreState[id] * 100}%)`;
+            document.getElementById('label-' + id).textContent = `p. ${scoreState[id] + 1}`;
+        }
+        /* make score-slides a flex row so translateX works */
+        document.querySelectorAll('.score-slides').forEach(c => {
+            c.style.display = 'flex';
+            c.style.transition = 'transform 0.4s ease';
+        });
+    </script>
+</body>
+</html>
