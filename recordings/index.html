@@ -1,1 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>recordings — adrian zhang</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'Telegrama';
+            src: url('data:font/otf;base64,PASTE_BASE64_HERE') format('opentype');
+            font-weight: normal; font-style: normal;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: monospace; line-height: 1.6; color: #ffffff; background-color: #000000; }
+        h2 { font-family: 'Telegrama', monospace; font-size: 2.2rem; margin-bottom: 2rem; text-align: center; text-transform: uppercase; letter-spacing: 0.15em; color: #ff00ff; }
 
+        nav { background: #000000; padding: 1rem 2rem; box-shadow: 0 2px 5px rgba(255,255,255,0.05); position: sticky; top: 0; z-index: 100; }
+        nav ul { list-style: none; display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+        nav a  { text-decoration: none; font-weight: 500; transition: color 0.2s; }
+        nav a:hover { opacity: 1; }
+        .nav-home:hover         { color: #888888; }
+        .nav-about:hover        { color: #888888; }
+        .nav-compositions:hover { color: #ff00ff; }
+        .nav-recordings:hover   { color: #ff00ff; }
+        .nav-psych:hover        { color: #ffe600; }
+        .nav-volleyball:hover   { color: #00f5ff; }
+        .nav-resume:hover       { color: #c084fc; }
+        .nav-contact:hover      { color: #00f5ff; }
+        .nav-home, .nav-about, .nav-compositions, .nav-recordings,
+        .nav-psych, .nav-volleyball, .nav-resume { color: #ffffff; }
+        .nav-contact { color: #ffffff; font-weight: 700; }
+
+        section { padding: 4rem 2rem; max-width: 1000px; margin: 0 auto; }
+        .page-caption { color: #ff00ff; text-align: center; margin-bottom: 3rem; font-size: 1rem; opacity: 0.8; }
+
+        /* ── recording entry ── */
+        .recording-list { display: grid; gap: 3rem; }
+
+        .recording-entry { display: flex; flex-direction: column; gap: 1rem; }
+
+        .rec-header { display: flex; align-items: flex-start; gap: 1.5rem; }
+
+        /* album art — replace background with your img */
+        .rec-art {
+            width: 90px;
+            height: 90px;
+            flex-shrink: 0;
+            border-radius: 6px;
+            border: 1px solid #ff00ff33;
+            background: repeating-linear-gradient(45deg, #181818 0px, #181818 2px, #111 2px, #111 10px);
+            overflow: hidden;
+        }
+        /* to add art: <img src="/art/three-three-two.png" style="width:100%;height:100%;object-fit:cover;"> inside .rec-art */
+
+        .rec-meta { flex: 1; }
+        .rec-title { font-size: 1.1rem; font-weight: 600; color: #ff00ff; margin-bottom: 0.3rem; letter-spacing: 0.04em; }
+        .rec-instrumentation { font-size: 0.78rem; color: #ff00ff; opacity: 0.55; line-height: 1.5; }
+
+        /* youtube embed */
+        .rec-youtube {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border: none;
+            border-radius: 8px;
+        }
+
+        /* custom audio player — same as main page */
+        .custom-player {
+            display: flex; align-items: center; gap: 0.9rem;
+            background: #111; border: 1px solid #ff00ff33;
+            border-radius: 8px; padding: 0.75rem 1rem;
+        }
+        .play-btn {
+            background: none; border: 1px solid #ff00ff; color: #ff00ff;
+            width: 34px; height: 34px; border-radius: 50%; font-size: 0.85rem;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; padding: 0; transition: background 0.2s, color 0.2s; font-family: monospace;
+        }
+        .play-btn:hover { background: #ff00ff; color: #000; }
+        .player-scrubber { flex: 1; }
+        .scrubber-bar { width: 100%; height: 3px; background: #333; border-radius: 2px; cursor: pointer; position: relative; margin-bottom: 0.35rem; }
+        .scrubber-fill { height: 100%; background: #ff00ff; border-radius: 2px; width: 0%; pointer-events: none; transition: width 0.1s linear; }
+        .time-display { font-family: monospace; font-size: 0.7rem; color: #ff00ff; opacity: 0.55; }
+        .volume-btn { background: none; border: none; color: #ff00ff; opacity: 0.55; cursor: pointer; font-size: 0.9rem; padding: 0; flex-shrink: 0; transition: opacity 0.2s; font-family: monospace; }
+        .volume-btn:hover { opacity: 1; }
+        .custom-player audio { display: none; }
+
+        /* divider between entries */
+        .rec-divider { border: none; border-top: 1px solid #ff00ff18; margin: 0; }
+
+        /* ── photo placeholder ── */
+        .photo-slot {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            /* hidden until you add an image — set display:block and add <img> inside */
+            display: none;
+        }
+        .photo-slot img { width: 100%; border-radius: 8px; border: 1px solid #ff00ff22; }
+        /* to activate: remove display:none and add <img src="your-photo.png"> inside the div */
+
+        /* ── footer ── */
+        footer { background: #111111; color: white; text-align: center; padding: 2rem; }
+        .social-links { display: flex; justify-content: center; gap: 1.5rem; margin-top: 1rem; }
+        .social-links a { text-decoration: none; transition: color 0.2s; }
+        .yt-you, .yt-tube { color: #ff00ff; }
+        .ig-ins, .ig-tag, .ig-ram { color: #00f5ff; }
+        .gmail-g, .gmail-m, .gmail-a, .gmail-i, .gmail-l { color: #ffe600; }
+        .link-youtube:hover .yt-you  { color: #ff0000; }
+        .link-youtube:hover .yt-tube { color: #ffffff; }
+        .link-instagram:hover .ig-ins { color: #BD22E2; }
+        .link-instagram:hover .ig-tag { color: #E61B5D; }
+        .link-instagram:hover .ig-ram { color: #FAD620; }
+        .link-gmail:hover .gmail-g { color: #4285f4; }
+        .link-gmail:hover .gmail-m { color: #c5221f; }
+        .link-gmail:hover .gmail-a { color: #ea4335; }
+        .link-gmail:hover .gmail-i { color: #fbbc04; }
+        .link-gmail:hover .gmail-l { color: #34a853; }
+
+        @media (max-width: 768px) {
+            h2 { font-size: 1.6rem; }
+            nav ul { flex-wrap: wrap; gap: 1rem; }
+            .rec-art { width: 70px; height: 70px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/"             class="nav-home">home</a></li>
+            <li><a href="/#about"       class="nav-about">about</a></li>
+            <li><a href="/#compositions"class="nav-compositions">compositions</a></li>
+            <li><a href="/#recordings"  class="nav-recordings">recordings</a></li>
+            <li><a href="/psychology"   class="nav-psych">psychology</a></li>
+            <li><a href="/volleyball"   class="nav-volleyball">volleyball</a></li>
+            <li><a href="/resume"       class="nav-resume">resume</a></li>
+            <li><a href="/#contact"     class="nav-contact">| contact me! |</a></li>
+        </ul>
+    </nav>
+
+    <section>
+        <h2>recordings</h2>
+        <p class="page-caption">all available recordings and midis</p>
+
+        <!-- PHOTO SLOT 1 — banner above list (safe: above all content) -->
+        <!-- to activate: remove display:none from .photo-slot, add <img> inside -->
+        <div class="photo-slot" id="photo-top">
+            <!-- <img src="/photos/recordings-banner.png" alt="recordings"> -->
+        </div>
+
+        <div class="recording-list">
+
+            <!-- ── 1. three three two (YouTube) ── -->
+            <div class="recording-entry">
+                <div class="rec-header">
+                    <div class="rec-art">
+                        <!-- <img src="/art/three-three-two.png" alt="three three two"> -->
+                    </div>
+                    <div class="rec-meta">
+                        <div class="rec-title">three three two (2025)</div>
+                        <div class="rec-instrumentation">clarinet in Bb, horn in F, bassoon, viola, violoncello, percussion (marimba, snare drum, suspended cymbal [with bow])</div>
+                    </div>
+                </div>
+                <iframe class="rec-youtube"
+                    src="https://www.youtube.com/embed/aoppXfW0f6M?si=k1SsDwUdU4dc-OYl"
+                    allowfullscreen></iframe>
+            </div>
+
+            <hr class="rec-divider">
+
+            <!-- PHOTO SLOT 2 — between entry 1 and 2 (safe: just a divider replacement) -->
+            <div class="photo-slot" id="photo-mid1">
+                <!-- <img src="/photos/recording-mid1.png" alt=""> -->
+            </div>
+
+            <!-- ── 2. into the depths (MP3) ── -->
+            <div class="recording-entry">
+                <div class="rec-header">
+                    <div class="rec-art">
+                        <!-- <img src="/art/into-the-depths.png" alt="into the depths"> -->
+                    </div>
+                    <div class="rec-meta">
+                        <div class="rec-title">into the depths (2025)</div>
+                        <div class="rec-instrumentation">for triple winds orchestra</div>
+                    </div>
+                </div>
+                <div class="custom-player">
+                    <button class="play-btn" onclick="togglePlay(this)">&#9654;</button>
+                    <div class="player-scrubber">
+                        <div class="scrubber-bar" onclick="scrub(event,this)"><div class="scrubber-fill"></div></div>
+                        <div class="time-display">0:00 / 0:00</div>
+                    </div>
+                    <button class="volume-btn" onclick="toggleMute(this)">&#128266;</button>
+                    <audio preload="none"><source src="/Into The Depths (FINAL5) wang.mp3" type="audio/mpeg"></audio>
+                </div>
+            </div>
+
+            <hr class="rec-divider">
+
+            <!-- ── 3. (re)birth — NO RECORDING YET ── -->
+            <!-- PHOTO SLOT 3 — next to (re)birth placeholder (safe: commented out block) -->
+            <!--
+            <div class="photo-slot" id="photo-rebirth">
+                <img src="/photos/rebirth.png" alt="(re)birth">
+            </div>
+            NOTE: (re)birth has no recording yet. Uncomment and fill in below when available.
+            <div class="recording-entry">
+                <div class="rec-header">
+                    <div class="rec-art">
+                        <img src="/art/rebirth.png" alt="(re)birth">
+                    </div>
+                    <div class="rec-meta">
+                        <div class="rec-title">(re)birth (2024)</div>
+                        <div class="rec-instrumentation">for large orchestra</div>
+                    </div>
+                </div>
+                [ADD YOUTUBE EMBED OR CUSTOM PLAYER HERE]
+            </div>
+            <hr class="rec-divider">
+            -->
+
+            <!-- ── 4. memories — NO RECORDING YET ── -->
+            <!--
+            NOTE: memories has no recording yet. Uncomment and fill in below when available.
+            <div class="recording-entry">
+                <div class="rec-header">
+                    <div class="rec-art">
+                        <img src="/art/memories.png" alt="memories">
+                    </div>
+                    <div class="rec-meta">
+                        <div class="rec-title">memories (2024)</div>
+                        <div class="rec-instrumentation">for harp, piano, vibraphone, flute, and cello</div>
+                    </div>
+                </div>
+                [ADD YOUTUBE EMBED OR CUSTOM PLAYER HERE]
+            </div>
+            <hr class="rec-divider">
+            -->
+
+            <!-- ── 5. meltdown I (MP3) ── -->
+            <div class="recording-entry">
+                <div class="rec-header">
+                    <div class="rec-art">
+                        <!-- <img src="/art/meltdown.png" alt="meltdown I"> -->
+                    </div>
+                    <div class="rec-meta">
+                        <div class="rec-title">meltdown I (2024)</div>
+                        <div class="rec-instrumentation">flute, bass clarinet in Bb, large gong (doubling bass drum), vibraphone, piano, violin, viola, cello</div>
+                    </div>
+                </div>
+                <div class="custom-player">
+                    <button class="play-btn" onclick="togglePlay(this)">&#9654;</button>
+                    <div class="player-scrubber">
+                        <div class="scrubber-bar" onclick="scrub(event,this)"><div class="scrubber-fill"></div></div>
+                        <div class="time-display">0:00 / 0:00</div>
+                    </div>
+                    <button class="volume-btn" onclick="toggleMute(this)">&#128266;</button>
+                    <audio preload="none"><source src="/meltdown I — [NAME OMITTED].mp3" type="audio/mpeg"></audio>
+                </div>
+            </div>
+
+            <hr class="rec-divider">
+
+            <!-- PHOTO SLOT 4 — between meltdown and war (safe) -->
+            <div class="photo-slot" id="photo-mid2">
+                <!-- <img src="/photos/recording-mid2.png" alt=""> -->
+            </div>
+
+            <!-- ── 6. war (MP3) ── -->
+            <div class="recording-entry">
+                <div class="rec-header">
+                    <div class="rec-art">
+                        <!-- <img src="/art/war.png" alt="war"> -->
+                    </div>
+                    <div class="rec-meta">
+                        <div class="rec-title">war (2023)</div>
+                        <div class="rec-instrumentation">piano, violin, viola, cello</div>
+                    </div>
+                </div>
+                <div class="custom-player">
+                    <button class="play-btn" onclick="togglePlay(this)">&#9654;</button>
+                    <div class="player-scrubber">
+                        <div class="scrubber-bar" onclick="scrub(event,this)"><div class="scrubber-fill"></div></div>
+                        <div class="time-display">0:00 / 0:00</div>
+                    </div>
+                    <button class="volume-btn" onclick="toggleMute(this)">&#128266;</button>
+                    <audio preload="none"><source src="/War for Piano Quartet.mp3" type="audio/mpeg"></audio>
+                </div>
+            </div>
+
+            <hr class="rec-divider">
+
+            <!-- ── 7. progression — NO RECORDING YET ── -->
+            <!--
+            NOTE: progression has no recording listed. Uncomment and fill in when available.
+            <div class="recording-entry">
+                <div class="rec-header">
+                    <div class="rec-art">
+                        <img src="/art/progression.png" alt="progression">
+                    </div>
+                    <div class="rec-meta">
+                        <div class="rec-title">progression (2023)</div>
+                        <div class="rec-instrumentation">solo piano</div>
+                    </div>
+                </div>
+                [ADD YOUTUBE EMBED OR CUSTOM PLAYER HERE]
+            </div>
+            <hr class="rec-divider">
+            -->
+
+            <!-- ── 8. quest — NO RECORDING YET ── -->
+            <!--
+            NOTE: quest has no recording listed. Uncomment and fill in when available.
+            <div class="recording-entry">
+                <div class="rec-header">
+                    <div class="rec-art">
+                        <img src="/art/quest.png" alt="quest">
+                    </div>
+                    <div class="rec-meta">
+                        <div class="rec-title">quest (2022)</div>
+                        <div class="rec-instrumentation">solo piano</div>
+                    </div>
+                </div>
+                [ADD YOUTUBE EMBED OR CUSTOM PLAYER HERE]
+            </div>
+            -->
+
+        </div><!-- end recording-list -->
+
+        <!-- PHOTO SLOT 5 — below all recordings (safe: after all content) -->
+        <div class="photo-slot" id="photo-bottom">
+            <!-- <img src="/photos/recordings-footer.png" alt=""> -->
+        </div>
+
+    </section>
+
+    <footer>
+        <p>&copy; 2026 adrian zhang. all rights reserved.</p>
+        <div class="social-links">
+            <a href="https://www.youtube.com/@azhang623" target="_blank" class="link-youtube">
+                <span class="yt-you">you</span><span class="yt-tube">tube</span>
+            </a>
+            <a href="mailto:adrian.b.zhang@gmail.com" class="link-gmail">
+                <span class="gmail-g">g</span><span class="gmail-m">m</span><span class="gmail-a">a</span><span class="gmail-i">i</span><span class="gmail-l">l</span>
+            </a>
+            <a href="https://www.instagram.com/azhang_23" target="_blank" class="link-instagram">
+                <span class="ig-ins">ins</span><span class="ig-tag">tag</span><span class="ig-ram">ram</span>
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        function getAudio(btn) { return btn.closest('.custom-player').querySelector('audio'); }
+        function togglePlay(btn) {
+            const audio = getAudio(btn);
+            document.querySelectorAll('.custom-player audio').forEach(a => {
+                if (a !== audio) { a.pause(); a.closest('.custom-player').querySelector('.play-btn').innerHTML = '&#9654;'; }
+            });
+            if (audio.paused) { audio.play(); btn.innerHTML = '&#9646;&#9646;'; }
+            else { audio.pause(); btn.innerHTML = '&#9654;'; }
+        }
+        function toggleMute(btn) { const audio = getAudio(btn); audio.muted = !audio.muted; btn.innerHTML = audio.muted ? '&#128263;' : '&#128266;'; }
+        function scrub(e, bar) {
+            const audio = bar.closest('.custom-player').querySelector('audio');
+            const rect = bar.getBoundingClientRect();
+            const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+            if (audio.duration) audio.currentTime = pct * audio.duration;
+        }
+        function fmt(s) { if (!s || isNaN(s)) return '0:00'; const m = Math.floor(s/60), sec = Math.floor(s%60); return `${m}:${sec.toString().padStart(2,'0')}`; }
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.custom-player').forEach(player => {
+                const audio = player.querySelector('audio');
+                const fill  = player.querySelector('.scrubber-fill');
+                const time  = player.querySelector('.time-display');
+                audio.addEventListener('timeupdate', () => { fill.style.width = (audio.duration ? audio.currentTime/audio.duration*100 : 0)+'%'; time.textContent = `${fmt(audio.currentTime)} / ${fmt(audio.duration)}`; });
+                audio.addEventListener('ended', () => { player.querySelector('.play-btn').innerHTML = '&#9654;'; fill.style.width = '0%'; });
+            });
+        });
+    </script>
+</body>
+</html>
