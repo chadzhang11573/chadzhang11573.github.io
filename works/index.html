@@ -422,11 +422,6 @@
             container.style.transform = `translateX(-${scoreState[id] * 100}%)`;
             document.getElementById('label-' + id).textContent = `p. ${scoreState[id] + 1}`;
         }
-        /* make score-slides a flex row so translateX works */
-        document.querySelectorAll('.score-slides').forEach(c => {
-            c.style.display = 'flex';
-            c.style.transition = 'transform 0.4s ease';
-        });
     </script>
 </body>
 </html>
