@@ -50,20 +50,31 @@
         }
         .work-item:hover { transform: scale(1.02); z-index: 10; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
 
-        .work-left { border-right: 1px solid #ff00ff33; padding-right: 2rem; }
+        .work-left { border-right: 1px solid #ff00ff; padding-right: 2rem; }
         .work-title { font-size: 1.1rem; font-weight: 600; color: #ff00ff; margin-bottom: 0.3rem; }
         .work-year  { font-size: 0.85rem; color: #ff00ff; opacity: 0.7; margin-bottom: 0.5rem; }
         .work-instrumentation { font-size: 0.85rem; color: #ff00ff; opacity: 0.8; margin-top: 0.5rem; }
         .work-contact { font-size: 0.85rem; color: #ffffff; margin-top: 0.6rem; }
         .work-desc  { color: #cccccc; margin-bottom: 0.5rem; font-size: 0.95rem; }
 
-        /* ── score carousel (right side) ── */
+       /* ── score carousel (right side) ── */
         .work-right { display: flex; flex-direction: column; gap: 1rem; }
 
-        .score-carousel { position: relative; }
-        .score-slides { display: flex; overflow: hidden; border-radius: 6px; border: 1px solid #ff00ff22; }
+        .score-carousel { 
+            position: relative; 
+            overflow: hidden; /* 1. Outer wrapper acts as the viewing window */
+            border-radius: 6px; 
+            border: 1px solid #ff00ff; 
+        }
+        
+        .score-slides { 
+            display: flex; 
+            transition: transform 0.4s ease; /* 2. Removed overflow: hidden here */
+        }
+        
         .score-slide {
             min-width: 100%;
+            flex-shrink: 0; /* 3. Prevents slides from shrinking */
             background: #1a1a1a;
             aspect-ratio: 8.5 / 11;
             display: flex;
@@ -72,23 +83,18 @@
             color: #333;
             font-size: 0.75rem;
             letter-spacing: 0.08em;
-            transition: transform 0.4s ease;
-            /* ── replace the background with your score image ──
-               e.g. background-image: url('/scores/war-p1.png');
-                    background-size: cover; background-position: top; */
             background: repeating-linear-gradient(45deg, #181818 0px, #181818 2px, #111 2px, #111 10px);
         }
         .score-slide img { width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 5px; }
 
         .score-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; }
         .score-btn {
-            background: none; border: 1px solid #ff00ff44; color: #ff00ff;
+            background: none; border: 1px solid #ff00ff; color: #ff00ff;
             padding: 0.2rem 0.6rem; border-radius: 4px; cursor: pointer;
             font-family: monospace; font-size: 0.8rem; transition: background 0.2s;
         }
         .score-btn:hover { background: rgba(255,0,255,0.1); }
         .score-page-label { font-size: 0.75rem; color: #ff00ff; opacity: 0.5; }
-
         /* ── footer ── */
         footer { background: #111111; color: white; text-align: center; padding: 2rem; }
         .social-links { display: flex; justify-content: center; gap: 1.5rem; margin-top: 1rem; }
