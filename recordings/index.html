@@ -50,8 +50,14 @@
             border-radius: 6px;
             border: 1px solid #ff00ff33;
             background: repeating-linear-gradient(45deg, #181818 0px, #181818 2px, #111 2px, #111 10px);
-            overflow: hidden;
         }
+        /* Keep your original .rec-art styles exactly as they are, then add this below it: */
+        .rec-art img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Prevents distorting/squishing while scaling it down to 90px */
+        }
+
         /* to add art: <img src="/art/three-three-two.png" style="width:100%;height:100%;object-fit:cover;"> inside .rec-art */
 
         .rec-meta { flex: 1; }
